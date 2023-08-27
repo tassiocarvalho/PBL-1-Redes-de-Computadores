@@ -28,6 +28,8 @@ A Representational State Transfer (REST) é uma arquitetura de estilo que define
 
 O sistema foi projetado seguindo uma arquitetura de Nuvem IoT centralizada. As compras feitas em cada caixa são transmitidas pela internet para um centro de dados em nuvem.
 
+![APIREST drawio](https://github.com/tassiocarvalho/PBL-1-Redes-de-Computadores/assets/90158519/237fd084-7df9-4806-b1d4-dfe315707285)
+
 Para testar o protótipo, o caixa do supermercado foi simulado através de um software usado via terminal que gera compras fictícias. Esse software emula um cenário onde os produtos no carrinho são identificados através de um leitor RFID.
 
 Ao aderir ao protocolo de uma API REST, implementamos duas interfaces principais:
