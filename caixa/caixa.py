@@ -50,15 +50,29 @@ def escolher_caixa():
     response = requests.get("http://192.168.1.24:8000/caixa")
     if response.status_code == 200:
         caixas = response.json()
-        ids_disponiveis = [caixa["id"] for caixa in caixas]
+        
+        # Filtrando caixas disponíveis
+        caixas_disponiveis = [caixa for caixa in caixas if caixa.get('status', False)]
+        
+        # Se todos os caixas estiverem bloqueados
+        if not caixas_disponiveis:
+            print("\nTodos os caixas estão bloqueados no momento.")
+            return None
+        
+        ids_disponiveis = [caixa["id"] for caixa in caixas_disponiveis]
         
         print("\nCAIXAS DISPONÍVEIS ID:", ", ".join(map(str, ids_disponiveis)))
         
         while True:
             try:
                 escolha = int(input("Escolha qual caixa para iniciar: "))
-                if escolha in ids_disponiveis:
-                    return escolha
+                caixa_escolhido = next((caixa for caixa in caixas_disponiveis if caixa['id'] == escolha), None)
+                
+                if caixa_escolhido:
+                    if not caixa_escolhido.get('status', False):
+                        print("\nO caixa selecionado está bloqueado. Escolha outro.")
+                    else:
+                        return escolha
                 else:
                     print("\nID de caixa inválido. Tente novamente.")
             except ValueError:
