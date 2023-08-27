@@ -28,7 +28,7 @@ A Representational State Transfer (REST) é uma arquitetura de estilo que define
 
 O sistema foi projetado seguindo uma arquitetura de Nuvem IoT centralizada. As compras feitas em cada caixa são transmitidas pela internet para um centro de dados em nuvem.
 
-Para testar o protótipo, o caixa do supermercado foi simulado através de um software que gera compras fictícias. Esse software emula um cenário onde os produtos no carrinho são identificados através de um leitor RFID.
+Para testar o protótipo, o caixa do supermercado foi simulado através de um software usado via terminal que gera compras fictícias. Esse software emula um cenário onde os produtos no carrinho são identificados através de um leitor RFID.
 
 Ao aderir ao protocolo de uma API REST, implementamos duas interfaces principais:
 
@@ -54,5 +54,6 @@ Para manter a integridade e a segurança do projeto, foi decidido não utilizar 
 
 ## Considerações Finais
 
-O projeto "Supermercado Inteligente" representa um marco no setor de varejo, tornando o processo de compra e gestão mais eficiente através da integração de tecnologias avançadas. Embora tenhamos simulado apenas uma parte do que um verdadeiro supermercado inteligente pode oferecer, este projeto serve como um protótipo robusto para futuras expansões e integrações. Com a contínua evolução da tecnologia, as oportunidades para otimização e melhoria são infinitas.
+O projeto "Supermercado Inteligente", conforme apresentado, contempla uma parcela significativa do que foi solicitado inicialmente. Demonstrou-se uma abordagem centralizada da arquitetura de Nuvem IoT, alavancando as vantagens de uma API REST para a comunicação entre o caixa e o centro de dados. A simulação do caixa do supermercado, junto com o software de geração de compras fictícias, oferece uma visão tangível de como tal sistema poderia funcionar na prática.
+No entanto, como é típico de muitos protótipos iniciais, existem áreas evidentes para melhoria e expansão. Uma delas, por exemplo, é a introdução de uma interface visual mais intuitiva e amigável para o usuário, que poderia melhorar significativamente a experiência do cliente e do administrador. Esta interface visual não só poderia simplificar o processo de compra para os clientes, mas também fornecer ao administrador uma visão mais clara e analítica das operações do supermercado.
 
