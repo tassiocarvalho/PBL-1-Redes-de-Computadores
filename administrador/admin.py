@@ -50,7 +50,9 @@ def acompanhar_compras_tempo_real():
                 break
             time.sleep(5)  # Checa a cada 5 segundos
     except KeyboardInterrupt:
-        print("\nAcompanhamento interrompido.")
+        print("\nAcompanhamento interrompido. Retornando ao menu principal...")
+        time.sleep(1)  # Uma pausa breve para o usuário ler a mensagem
+
 
 def criar_caixa():
     try:
@@ -145,7 +147,7 @@ def main():
         elif escolha == '2':
             get_compras()
         elif escolha == '3':
-            threading.Thread(target=acompanhar_compras_tempo_real).start()
+            acompanhar_compras_tempo_real()
         elif escolha == '4':
             criar_caixa()
         elif escolha == '6':
