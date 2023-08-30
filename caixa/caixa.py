@@ -1,6 +1,13 @@
 import json
 import requests
 import socket
+import sys
+import os
+
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+
+from ipconfig import hostip, port, server_host
 
 def realizar_compra():
     produtos = []
@@ -61,7 +68,7 @@ def pagar_compra(total):
         return False
 
 def escolher_caixa():
-    response = requests.get("http://192.168.1.24:8000/caixa")
+    response = requests.get(server_host+"caixa")
     if response.status_code == 200:
         caixas = response.json()
         
@@ -120,7 +127,7 @@ def main():
         elif escolha == '4':
             total = exibir_carrinho(compras)
             if pagar_compra(total):
-                response = requests.post("http://192.168.1.24:8000/compras", json=compras)
+                response = requests.post(server_host+"compras", json=compras)
                 
                 if response.status_code == 201:
                     print("\nCompra realizada com sucesso!")

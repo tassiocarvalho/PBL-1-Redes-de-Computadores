@@ -4,10 +4,14 @@ import time
 import os
 import sys
 
-SERVER_URL = "http://172.17.0.4:80"
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+
+from ipconfig import hostip, server_host, port
+#SERVER_URL = "http://172.17.0.4:8000"
 
 def get_caixas():
-    response = requests.get(f"{SERVER_URL}/caixa")
+    response = requests.get(f"{server_host}caixa")
     if response.status_code == 200:
         caixas = response.json()
         for caixa in caixas:
@@ -16,7 +20,7 @@ def get_caixas():
         print("Erro ao recuperar caixas.")
 
 def get_compras():
-    response = requests.get(f"{SERVER_URL}/compras")
+    response = requests.get(f"{server_host}compras")
     if response.status_code == 200:
         compras = response.json()
         for compra in compras:
@@ -69,7 +73,7 @@ def criar_caixa():
         }
 
         # Fazer requisição POST ao servidor para adicionar o caixa
-        response = requests.post(f"{SERVER_URL}/caixa", json=novo_caixa)
+        response = requests.post(f"{server_host}caixa", json=novo_caixa)
 
         if response.status_code == 201:
             print(f"\nCaixa com ID {caixa_id} criado com sucesso!")
@@ -90,7 +94,7 @@ def bloquear_desbloquear_caixa():
         caixa_id = int(caixa_id_no_int)
 
         # Obter o status atual do caixa
-        response = requests.get(f"{SERVER_URL}/caixa/{caixa_id}")
+        response = requests.get(f"{server_host}caixa/{caixa_id}")
         
         if response.status_code != 200:
             print(f"\nErro ao obter informações do caixa. Código de status: {response.status_code}. Mensagem: {response.text}")
@@ -114,7 +118,7 @@ def bloquear_desbloquear_caixa():
         # Atualizar o status do caixa com base na escolha do administrador
         if novo_status != atual_status:
             data = {'status': novo_status}
-            response = requests.put(f"{SERVER_URL}/caixa/{caixa_id}", json=data)
+            response = requests.put(f"{server_host}caixa/{caixa_id}", json=data)
             if response.status_code == 200:
                 if novo_status:
                     print(f"\nCaixa {caixa_id} foi desbloqueado com sucesso!")

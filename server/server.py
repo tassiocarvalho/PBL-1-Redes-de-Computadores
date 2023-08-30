@@ -2,8 +2,14 @@ import socket
 import json
 import re
 import threading
+import sys
+import os
 
-HOST, PORT = '192.168.1.24', 8000
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+
+#HOST, PORT = '192.168.1.24', 8000
+from ipconfig import hostip, server_host, port
 
 data_store = {
     'caixa': [],
@@ -84,9 +90,9 @@ def handle_client(conn, addr):
 
 def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((HOST, PORT))
+        s.bind((hostip, port))
         s.listen()
-        print(f"Server listening on {HOST}:{PORT}")
+        print(f"Server listening on {hostip}:{port}")
         while True:
             conn, addr = s.accept()
             client_thread = threading.Thread(target=handle_client, args=(conn, addr))
