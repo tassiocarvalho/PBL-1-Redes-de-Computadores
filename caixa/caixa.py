@@ -1,5 +1,6 @@
 import json
 import requests
+import socket
 
 def realizar_compra():
     produtos = []
@@ -22,6 +23,19 @@ def realizar_compra():
         
         produtos.append(produto)
 
+    return produtos
+
+def pegar_produtos_do_sensor():
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client_socket.sendto('Olá, servidor!'.encode('utf-8'), ("192.168.1.24", 8000))
+
+    data, server_address = client_socket.recvfrom(1024)
+    produtos = json.loads(data.decode('utf-8'))
+
+    print("\nProdutos adquiridos do sensor:")
+    for produto in produtos:
+        print(f"Nome: {produto['nome']}, Preço: {produto['preco']}")
+        
     return produtos
 
 def exibir_carrinho(compras):
@@ -88,29 +102,32 @@ def main():
     compras = []
     while True:
         print("\nOpções:")
-        print("1: Adicionar produto à compra")
-        print("2: Verificar itens no carrinho")
-        print("3: Pagar compra")
-        print("4: Sair")
+        print("1: Adicionar produto à compra manualmente")
+        print("2: Pegar produtos do sensor")
+        print("3: Verificar itens no carrinho")
+        print("4: Pagar compra")
+        print("5: Sair")
 
         escolha = input("\nSelecione uma opção: ")
 
         if escolha == '1':
-            compras += realizar_compra() # Concatenando as novas compras à lista
+            compras += realizar_compra()
         elif escolha == '2':
-            exibir_carrinho(compras)
+            produtos_sensor = pegar_produtos_do_sensor()
+            compras += produtos_sensor
         elif escolha == '3':
+            exibir_carrinho(compras)
+        elif escolha == '4':
             total = exibir_carrinho(compras)
             if pagar_compra(total):
-                # Se o pagamento for bem-sucedido, envia a lista de compras para o servidor via POST
                 response = requests.post("http://192.168.1.24:8000/compras", json=compras)
                 
                 if response.status_code == 201:
                     print("\nCompra realizada com sucesso!")
-                    compras = []  # Resetando a lista de compras após o pagamento bem-sucedido
+                    compras = []
                 else:
                     print("\nErro ao realizar compra.")
-        elif escolha == '4':
+        elif escolha == '5':
             print("\nSaindo...")
             break
         else:

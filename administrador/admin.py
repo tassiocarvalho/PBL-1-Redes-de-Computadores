@@ -4,7 +4,7 @@ import time
 import os
 import sys
 
-SERVER_URL = "http://192.168.1.24:8000"
+SERVER_URL = "http://172.17.0.4:80"
 
 def get_caixas():
     response = requests.get(f"{SERVER_URL}/caixa")
