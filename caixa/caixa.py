@@ -33,17 +33,22 @@ def realizar_compra():
     return produtos
 
 def pegar_produtos_do_sensor():
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    client_socket.sendto('Olá, servidor!'.encode('utf-8'), ("192.168.1.24", 8000))
+    try:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect(("192.168.1.24", 8001))
 
-    data, server_address = client_socket.recvfrom(1024)
-    produtos = json.loads(data.decode('utf-8'))
+        data = client_socket.recv(2048)
+        produtos = json.loads(data.decode('utf-8'))
 
-    print("\nProdutos adquiridos do sensor:")
-    for produto in produtos:
-        print(f"Nome: {produto['nome']}, Preço: {produto['preco']}")
-        
-    return produtos
+        print("\nProdutos adquiridos do sensor:")
+        for produto in produtos:
+            print(f"Nome: {produto['nome']}, Preço: {produto['preco']}")
+
+        client_socket.close()
+        return produtos
+    except Exception as e:
+        print(f"Erro ao pegar produtos do sensor: {e}")
+        return []
 
 def exibir_carrinho(compras):
     total = 0
@@ -102,12 +107,37 @@ def escolher_caixa():
         print("Erro ao recuperar caixas.")
         return None
 
+def verificar_status_caixa(id_caixa):
+    try:
+        response = requests.get(f"{server_host}caixa/{id_caixa}")
+        if response.status_code == 200:
+            caixa = response.json()
+            if not caixa.get('status', False):
+                print("\nCAIXA BLOQUEADO PELO ADMINISTRADOR")
+                return False
+            return True
+        else:
+            print("\nErro ao verificar status do caixa.")
+            return False
+    except Exception as e:
+        print(f"Erro ao verificar status do caixa: {e}")
+        return False
+
+
 def main():
     id_caixa = escolher_caixa()
+    
+    if id_caixa is None:
+        print("Nenhum caixa disponível. Entre em contato com o administrador.")
+        return  # Termina o programa se não houver caixas disponíveis
+
     print(f"\nVocê escolheu o caixa com ID: {id_caixa}")
     
     compras = []
     while True:
+        if not verificar_status_caixa(id_caixa):
+            print("Ação cancelada devido ao caixa estar bloqueado.")
+            break
         print("\nOpções:")
         print("1: Adicionar produto à compra manualmente")
         print("2: Pegar produtos do sensor")

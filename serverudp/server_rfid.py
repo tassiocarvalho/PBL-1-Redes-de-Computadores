@@ -3,13 +3,16 @@ import json
 import threading
 
 # Função para tratar cada cliente em um thread separado
-def handle_client(client_address, server_socket, produtos):
+def handle_client(client_socket, produtos):
     # Convertendo a lista de produtos para string JSON
     produtos_json = json.dumps(produtos)
     
     # Enviando a string JSON para o cliente
-    server_socket.sendto(produtos_json.encode('utf-8'), client_address)
-    print(f"Dados enviados para {client_address}")
+    client_socket.sendall(produtos_json.encode('utf-8'))
+    print(f"Dados enviados para o cliente")
+    
+    # Fechando o socket do cliente
+    client_socket.close()
 
 def main():
     # Populando a lista de produtos
@@ -20,20 +23,24 @@ def main():
         {"nome": "Pera", "preco": 1.5, "quantidade": 12}
     ]
     
-    # Criando o socket UDP
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # Criando o socket TCP
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     # Vinculando o socket a uma porta
-    server_socket.bind(("192.168.1.24", 8000))
+    server_socket.bind(("192.168.1.24", 8001))
     
-    print("Servidor rodando e esperando por mensagens...")
+    # Escutando por conexões de clientes
+    server_socket.listen(5)
+    
+    print("Servidor rodando e esperando por conexões...")
     
     while True:
-        # Recebendo dados do cliente
-        data, client_address = server_socket.recvfrom(1024)
+        # Aceitando uma nova conexão do cliente
+        client_socket, client_address = server_socket.accept()
+        print(f"Conexão estabelecida com {client_address}")
         
         # Criando um novo thread para tratar o cliente
-        client_thread = threading.Thread(target=handle_client, args=(client_address, server_socket, produtos))
+        client_thread = threading.Thread(target=handle_client, args=(client_socket, produtos))
         client_thread.start()
 
 if __name__ == "__main__":
