@@ -25,57 +25,52 @@ def handle_request(data):
     if method == 'GET':
         if path == '/caixa':
             return 200, json.dumps(data_store['caixa'])
-        elif re.match(r'/caixa/\d+', path):  # Verifica se o caminho corresponde ao padrão /caixa/<ID>
-            caixa_id = int(path.split('/')[-1])  # Extrai o ID
-            # Procura o caixa correspondente pelo ID
+        elif re.match(r'/caixa/\d+', path):
+            caixa_id = int(path.split('/')[-1])
             caixa = next((item for item in data_store['caixa'] if item['id'] == caixa_id), None)
             if caixa:
                 return 200, json.dumps(caixa)
             else:
-                return 404, "Caixa not found"
+                return 404, json.dumps({"mensagem": "Caixa não encontrado"})
         elif path == '/compras':
             return 200, json.dumps(data_store['compras'])
         else:
-            return 404, "Not Found"
+            return 404, json.dumps({"mensagem": "Não encontrado"})
     elif method == 'POST':
         content_length = int(re.search(r'Content-Length: (\d+)', data).group(1))
         body = data[-content_length:]
         item = json.loads(body)
 
         if path == '/caixa':
-            # Verificar se um caixa com o mesmo ID já existe
             existing_caixa = next((caixa for caixa in data_store['caixa'] if caixa['id'] == item['id']), None)
             if existing_caixa:
-                return 409, "Caixa with the same ID already exists"
+                return 409, json.dumps({"mensagem": "Caixa com o mesmo ID já existe"})
             else:
                 data_store['caixa'].append(item)
-                return 201, "Item added to caixa"
+                return 201, json.dumps({"mensagem": "Item adicionado ao caixa"})
         elif path == '/compras':
             data_store['compras'].append(item)
-            return 201, "Item added to compras"
+            return 201, json.dumps({"mensagem": "Item adicionado às compras"})
         else:
-            return 404, "Not Found"
+            return 404, json.dumps({"mensagem": "Não encontrado"})
     elif method == 'PUT':
-        if re.match(r'/caixa/\d+', path):  # Verifica se o caminho corresponde ao padrão /caixa/<ID>
-            caixa_id = int(path.split('/')[-1])  # Extrai o ID
-
+        if re.match(r'/caixa/\d+', path):
+            caixa_id = int(path.split('/')[-1])
             content_length = int(re.search(r'Content-Length: (\d+)', data).group(1))
             body = data[-content_length:]
             update_data = json.loads(body)
 
-            # Procura o caixa correspondente pelo ID
             caixa = next((item for item in data_store['caixa'] if item['id'] == caixa_id), None)
 
             if caixa:
-                # Atualiza o status do caixa encontrado
                 caixa['status'] = update_data.get('status', caixa['status'])
-                return 200, "Caixa updated successfully"
+                return 200, json.dumps({"mensagem": "Caixa atualizado com sucesso"})
             else:
-                return 404, "Caixa not found"
+                return 404, json.dumps({"mensagem": "Caixa não encontrado"})
         else:
-            return 404, "Not Found"
+            return 404, json.dumps({"mensagem": "Não encontrado"})
     else:
-        return 405, "Method Not Allowed"
+        return 405, json.dumps({"mensagem": "Método não permitido"})
 
 def handle_client(conn, addr):
     try:
