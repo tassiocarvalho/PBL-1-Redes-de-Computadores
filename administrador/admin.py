@@ -14,19 +14,37 @@ def get_caixas():
     response = requests.get(f"{server_host}caixa")
     if response.status_code == 200:
         caixas = response.json()
+        print("Lista de Caixas:")
         for caixa in caixas:
-            print(caixa)
+            status = "ativo" if caixa['status'] else "bloqueado"
+            print(f"ID do caixa: {caixa['id']}, estado: {status}")
     else:
         print("Erro ao recuperar caixas.")
 
 def get_compras():
     response = requests.get(f"{server_host}compras")
     if response.status_code == 200:
-        compras = response.json()
-        for compra in compras:
-            print(compra)
+        compras_aninhadas = response.json()
+        if isinstance(compras_aninhadas, list):
+            print("Histórico de Compras:")
+            for i, compra_sublista in enumerate(compras_aninhadas):
+                if isinstance(compra_sublista, list):
+                    for compra in compra_sublista:
+                        if isinstance(compra, dict):
+                            nome = compra.get('nome', 'Desconhecido')
+                            preco = compra.get('preco', 0)
+                            quantidade = compra.get('quantidade', 0)
+                            print(f"{i+1}. Nome: {nome}, Preço: R$ {preco:.2f}, Quantidade: {quantidade}")
+                        else:
+                            print("Formato inesperado!")
+                else:
+                    print("Formato inesperado!")
+        else:
+            print("Formato inesperado!")
     else:
         print("Erro ao recuperar compras.")
+
+
 
 def clear_terminal():
     # Detectar o sistema operacional e limpar o terminal de acordo
@@ -136,6 +154,7 @@ def bloquear_desbloquear_caixa():
 
 def main():
     while True:
+        print("-------Painel do admin do Supermercado Gambiarra-------")
         print("\nOpções:")
         print("1: Ver caixas")
         print("2: Ver histórico de compras")
@@ -143,6 +162,7 @@ def main():
         print("4: Criar novo caixa") # Nova opção
         print("5: Bloquear/Desbloquear caixa")
         print("6: Sair")
+        print("-------------------------------------------------------")
 
         escolha = input("\nSelecione uma opção: ")
 
@@ -161,6 +181,9 @@ def main():
             bloquear_desbloquear_caixa()
         else:
             print("\nOpção inválida!")
+
+        input("\nPressione Enter para continuar...")  # Pausa para leitura
+        clear_terminal()
 
 if __name__ == "__main__":
     main()
