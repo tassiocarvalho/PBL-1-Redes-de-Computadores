@@ -8,8 +8,8 @@ def id_tags():
     # Dicionário de IDs RFID para produtos e preços
     rfid_products = {
         b'E2000017221101241890547C': {'name': 'Banana', 'price': 5.00},
-        b'E2000017221100961890544A': {'name': 'Pacoca', 'price': 10.00},  # Substitua 'ProdutoA' e 10.00 pelos valores reais
-        b'E2000017221101321890548C': {'name': 'Laranja', 'price': 12.00},  # e assim por diante...
+        b'E2000017221100961890544A': {'name': 'Pacoca', 'price': 10.00},
+        b'E2000017221101321890548C': {'name': 'Laranja', 'price': 12.00},
         b'E20000172211010118905454': {'name': 'Melancia', 'price': 8.00},
         b'E20000172211011718905474': {'name': 'Arroz', 'price': 15.00},
         b'E20000172211009418905449': {'name': 'Feijao', 'price': 7.00},
@@ -20,10 +20,18 @@ def id_tags():
     
     param = 2300
     
+    if len(sys.argv) > 1:
+        param = int(sys.argv[1])
+
     reader = mercury.Reader("tmr:///dev/ttyUSB0")
     reader.set_region("NA2")
     reader.set_read_plan([1], "GEN2", read_power=param)
+    epcs = map(lambda tag: tag, reader.read())
     tags = reader.read()
+    for tag in epcs:
+        print(tag.epc, tag.read_count, tag.rssi, datetime.fromtimestamp(tag.timestamp))
+
+    
     
     produtos = []
     for tag in tags:

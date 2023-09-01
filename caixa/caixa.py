@@ -35,7 +35,7 @@ def realizar_compra():
 def pegar_produtos_do_sensor():
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client_socket.connect(("192.168.1.24", 8001))
+        client_socket.connect(("172.16.103.228", 8001))
 
         data = client_socket.recv(2048)
         produtos = json.loads(data.decode('utf-8'))
