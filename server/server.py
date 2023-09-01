@@ -15,15 +15,16 @@ data_store = {
     'caixa': [{"id": 666,"status": True}],
     'compras': [],
     'produtos': [
-    {"nome": "Banana", "preco": 5.00, "quantidade": 10},
-    {"nome": "Pacoca", "preco": 10.00, "quantidade": 10},
-    {"nome": "Laranja", "preco": 12.00, "quantidade": 10},
-    {"nome": "Melancia", "preco": 8.00, "quantidade": 10},
-    {"nome": "Arroz", "preco": 15.00, "quantidade": 10},
-    {"nome": "Feijao", "preco": 7.00, "quantidade": 10},
-    {"nome": "Pera", "preco": 11.00, "quantidade": 10},
-    {"nome": "Macarrao", "preco": 14.00, "quantidade": 10},
-    {"nome": "Goiaba", "preco": 6.50, "quantidade": 10}]
+    {"nome": "Banana", "preco": 5.00, "quantidade": 20},
+    {"nome": "Pacoca", "preco": 10.00, "quantidade": 20},
+    {"nome": "Laranja", "preco": 12.00, "quantidade": 20},
+    {"nome": "Melancia", "preco": 8.00, "quantidade": 20},
+    {"nome": "Arroz", "preco": 15.00, "quantidade": 20},
+    {"nome": "Feijao", "preco": 7.00, "quantidade": 20},
+    {"nome": "Pera", "preco": 11.00, "quantidade": 20},
+    {"nome": "Macarrao", "preco": 14.00, "quantidade": 20},
+    {"nome": "Goiaba", "preco": 6.50, "quantidade": 20}
+]
 }
 
 def handle_request(data):

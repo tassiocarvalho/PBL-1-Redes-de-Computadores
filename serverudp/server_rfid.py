@@ -27,7 +27,7 @@ def main():
     {"nome": "Pera", "preco": 11.00, "quantidade": 1},
     {"nome": "Macarrao", "preco": 14.00, "quantidade": 1},
     {"nome": "Goiaba", "preco": 6.50, "quantidade": 1}
-    ]
+]
     
     # Criando o socket TCP
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
