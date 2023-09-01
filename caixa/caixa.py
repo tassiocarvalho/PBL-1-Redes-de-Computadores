@@ -3,39 +3,111 @@ import requests
 import socket
 import sys
 import os
+import time
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 from ipconfig import hostip, port, server_host
 
+def clear_terminal():
+    # Detectar o sistema operacional e limpar o terminal de acordo
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def atualizar_estoque(nome_produto, quantidade_real):
+    try:
+        response = requests.put(f"{server_host}produtos/{nome_produto}", json={'quantidade': quantidade_real})
+        if response.status_code != 200:
+            print(f"Erro ao atualizar o estoque do produto com nome {nome_produto}.")
+    except Exception as e:
+        print(f"Erro ao atualizar o estoque: {e}")
+
 def realizar_compra():
-    produtos = []
-    
+    try:
+        response = requests.get(server_host + "produtos")
+        if response.status_code != 200:
+            print("Não foi possível recuperar a lista de produtos.")
+            return []
+
+        produtos_disponiveis = response.json()
+        print("\nProdutos disponíveis:")
+        for idx, produto in enumerate(produtos_disponiveis):
+            print(f"[{idx+1}] Nome: {produto['nome']}, Preço: {produto['preco']}, Quantidade Disponível: {produto['quantidade']}")
+    except Exception as e:
+        print(f"Erro ao buscar lista de produtos: {e}")
+        return []
+
+    produtos_selecionados = []
     while True:
-        print("\nInforme os detalhes do produto ou digite 'sair' para finalizar a compra.")
-        
-        nome = input("Nome do produto: ")
-        if nome.lower() == 'sair':
+        print("\nSelecione um produto pelo número ou digite 'sair' para finalizar a compra.")
+        escolha = input("Escolha: ")
+
+        if escolha.lower() == 'sair':
             break
-        
-        preco = float(input("Preço do produto: "))
-        quantidade = int(input("Quantidade: "))
 
-        produto = {
-            'nome': nome,
-            'preco': preco,
-            'quantidade': quantidade
-        }
-        
-        produtos.append(produto)
+        try:
+            escolha = int(escolha) - 1
+            if escolha < 0 or escolha >= len(produtos_disponiveis):
+                print("Número de produto inválido.")
+                continue
 
-    return produtos
+            produto_escolhido = produtos_disponiveis[escolha]
+            quantidade = int(input(f"Quantidade de {produto_escolhido['nome']}: "))
+
+            if quantidade > produto_escolhido['quantidade']:
+                print("Quantidade indisponível.")
+                continue
+
+            # Atualize a quantidade do produto no servidor
+            quantidade_real = produto_escolhido['quantidade'] - quantidade
+            atualizar_estoque(produto_escolhido['nome'], quantidade_real)
+
+            produtos_selecionados.append({
+                'nome': produto_escolhido['nome'],
+                'preco': produto_escolhido['preco'],
+                'quantidade': quantidade
+            })
+        except ValueError:
+            print("Por favor, insira um número válido.")
+
+    return produtos_selecionados
+
+
+    while True:
+        print("\nSelecione um produto pelo número ou digite 'sair' para finalizar a compra.")
+        escolha = input("Escolha: ")
+
+        if escolha.lower() == 'sair':
+            break
+
+        try:
+            escolha = int(escolha) - 1  # Converter a escolha para índice da lista (0-based)
+            if escolha < 0 or escolha >= len(produtos_disponiveis):
+                print("Número de produto inválido.")
+                continue
+
+            produto_escolhido = produtos_disponiveis[escolha]
+            quantidade = int(input(f"Quantidade de {produto_escolhido['nome']}: "))
+
+            if quantidade > produto_escolhido['quantidade']:
+                print("Quantidade indisponível.")
+                continue
+
+            produtos_selecionados.append({
+                'nome': produto_escolhido['nome'],
+                'preco': produto_escolhido['preco'],
+                'quantidade': quantidade
+            })
+        except ValueError:
+            print("Por favor, insira um número válido.")
+
+    return produtos_selecionados
+
 
 def pegar_produtos_do_sensor():
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client_socket.connect(("172.16.103.228", 8001))
+        client_socket.connect(("192.168.1.24", 8001))
 
         data = client_socket.recv(2048)
         produtos = json.loads(data.decode('utf-8'))
@@ -43,6 +115,18 @@ def pegar_produtos_do_sensor():
         print("\nProdutos adquiridos do sensor:")
         for produto in produtos:
             print(f"Nome: {produto['nome']}, Preço: {produto['preco']}")
+
+            # Descontar o produto do estoque
+            try:
+                response = requests.get(f"{server_host}produtos/{produto['nome']}")
+                if response.status_code == 200:
+                    produto_servidor = response.json()
+                    quantidade_real = produto_servidor['quantidade'] - produto['quantidade']
+                    atualizar_estoque(produto['nome'], quantidade_real)
+                else:
+                    print(f"Produto {produto['nome']} não encontrado no estoque.")
+            except Exception as e:
+                print(f"Erro ao atualizar o estoque do produto {produto['nome']}: {e}")
 
         client_socket.close()
         return produtos
@@ -82,6 +166,7 @@ def escolher_caixa():
         
         # Se todos os caixas estiverem bloqueados
         if not caixas_disponiveis:
+            clear_terminal()
             print("\nTodos os caixas estão bloqueados no momento.")
             return None
         
@@ -130,20 +215,24 @@ def main():
     if id_caixa is None:
         print("Nenhum caixa disponível. Entre em contato com o administrador.")
         return  # Termina o programa se não houver caixas disponíveis
-
-    print(f"\nVocê escolheu o caixa com ID: {id_caixa}")
+    clear_terminal()
+    print(f"\nVocê escolheu o caixa com ID: {id_caixa} entrando no caixa...")
+    time.sleep(3)
+    clear_terminal()
     
     compras = []
     while True:
         if not verificar_status_caixa(id_caixa):
             print("Ação cancelada devido ao caixa estar bloqueado.")
             break
+        print('-------Caixa Supermercado gambiarra--------')
         print("\nOpções:")
-        print("1: Adicionar produto à compra manualmente")
-        print("2: Pegar produtos do sensor")
-        print("3: Verificar itens no carrinho")
-        print("4: Pagar compra")
-        print("5: Sair")
+        print("[1]: Adicionar produto à compra manualmente")
+        print("[2]: Pegar produtos do sensor")
+        print("[3]: Verificar itens no carrinho")
+        print("[4]: Pagar compra")
+        print("[5]: Sair")
+        print('-------------------------------------------')
 
         escolha = input("\nSelecione uma opção: ")
 
@@ -169,6 +258,9 @@ def main():
             break
         else:
             print("\nOpção inválida!")
+
+        input("\nPressione Enter para continuar...")  # Pausa para leitura
+        clear_terminal()
 
 if __name__ == "__main__":
     main()

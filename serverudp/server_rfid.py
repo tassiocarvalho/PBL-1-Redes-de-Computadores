@@ -18,17 +18,22 @@ def handle_client(client_socket, produtos):
 def main():
     # Populando a lista de produtos
     produtos = [
-        {"nome": "Maçã", "preco": 1.2, "quantidade": 10},
-        {"nome": "Banana", "preco": 0.5, "quantidade": 20},
-        {"nome": "Laranja", "preco": 1.0, "quantidade": 15},
-        {"nome": "Pera", "preco": 1.5, "quantidade": 12}
+    {"nome": "Banana", "preco": 5.00, "quantidade": 1},
+    {"nome": "Pacoca", "preco": 10.00, "quantidade": 1},
+    {"nome": "Laranja", "preco": 12.00, "quantidade": 1},
+    {"nome": "Melancia", "preco": 8.00, "quantidade": 1},
+    {"nome": "Arroz", "preco": 15.00, "quantidade": 1},
+    {"nome": "Feijao", "preco": 7.00, "quantidade": 1},
+    {"nome": "Pera", "preco": 11.00, "quantidade": 1},
+    {"nome": "Macarrao", "preco": 14.00, "quantidade": 1},
+    {"nome": "Goiaba", "preco": 6.50, "quantidade": 1}
     ]
     
     # Criando o socket TCP
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     # Vinculando o socket a uma porta
-    server_socket.bind(("172.16.103.0", 8001))
+    server_socket.bind(("192.168.1.24", 8001))
     
     # Escutando por conexões de clientes
     server_socket.listen(5)

@@ -12,8 +12,18 @@ sys.path.append(parent_dir)
 from ipconfig import hostip, server_host, port
 
 data_store = {
-    'caixa': [],
-    'compras': []
+    'caixa': [{"id": 666,"status": True}],
+    'compras': [],
+    'produtos': [
+    {"nome": "Banana", "preco": 5.00, "quantidade": 10},
+    {"nome": "Pacoca", "preco": 10.00, "quantidade": 10},
+    {"nome": "Laranja", "preco": 12.00, "quantidade": 10},
+    {"nome": "Melancia", "preco": 8.00, "quantidade": 10},
+    {"nome": "Arroz", "preco": 15.00, "quantidade": 10},
+    {"nome": "Feijao", "preco": 7.00, "quantidade": 10},
+    {"nome": "Pera", "preco": 11.00, "quantidade": 10},
+    {"nome": "Macarrao", "preco": 14.00, "quantidade": 10},
+    {"nome": "Goiaba", "preco": 6.50, "quantidade": 10}]
 }
 
 def handle_request(data):
@@ -32,8 +42,17 @@ def handle_request(data):
                 return 200, json.dumps(caixa)
             else:
                 return 404, json.dumps({"mensagem": "Caixa não encontrado"})
+        elif re.match(r'/produtos/[^/]+', path):
+            product_name = path.split('/')[-1]
+            product = next((item for item in data_store['produtos'] if item['nome'] == product_name), None)
+            if product:
+                return 200, json.dumps(product)
+            else:
+                return 404, json.dumps({"mensagem": "Produto não encontrado"})
         elif path == '/compras':
             return 200, json.dumps(data_store['compras'])
+        elif path == '/produtos':  # Aqui está a nova rota para produtos
+            return 200, json.dumps(data_store['produtos'])
         else:
             return 404, json.dumps({"mensagem": "Não encontrado"})
     elif method == 'POST':
@@ -67,6 +86,22 @@ def handle_request(data):
                 return 200, json.dumps({"mensagem": "Caixa atualizado com sucesso"})
             else:
                 return 404, json.dumps({"mensagem": "Caixa não encontrado"})
+        elif re.match(r'/produtos/[^/]+', path):  # Regex para casar com qualquer nome de produto
+            product_name = path.split('/')[-1]
+            content_length = int(re.search(r'Content-Length: (\d+)', data).group(1))
+            body = data[-content_length:]
+            update_data = json.loads(body)
+            
+            # Buscando o produto pelo nome
+            product = next((item for item in data_store['produtos'] if item['nome'] == product_name), None)
+            
+            if product:
+                new_quantity = update_data.get('quantidade', product['quantidade'])
+                product['quantidade'] = new_quantity  # Atualizando a quantidade
+                
+                return 200, json.dumps({"mensagem": f"Quantidade de {product_name} atualizada para {new_quantity}"})
+            else:
+                return 404, json.dumps({"mensagem": "Produto não encontrado"})
         else:
             return 404, json.dumps({"mensagem": "Não encontrado"})
     else:

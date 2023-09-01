@@ -102,6 +102,60 @@ def criar_caixa():
     except Exception as e:
         print(f"Erro ao criar caixa: {e}")
 
+import socket
+import json
+
+def atualizar_estoque():
+    produtos = [
+        "Banana",
+        "Pacoca",
+        "Laranja",
+        "Melancia",
+        "Arroz",
+        "Feijao",
+        "Pera",
+        "Macarrao",
+        "Goiaba"
+    ]
+    
+    print("\nSelecione um produto para atualizar o estoque:")
+    for i, produto in enumerate(produtos):
+        print(f"[{i+1}] {produto}")
+
+    try:
+        escolha = int(input("\nSelecione um produto pelo número: ")) - 1
+        produto_selecionado = produtos[escolha]
+
+        # Fazendo uma requisição GET para obter a quantidade atual
+        response = requests.get(f"{server_host}produtos/{produto_selecionado}")
+        if response.status_code == 200:
+            produto_info = response.json()
+            quantidade_atual = produto_info.get("quantidade", "Indisponível")
+            print(f"A quantidade atual de {produto_selecionado} é {quantidade_atual}.")
+        else:
+            print(f"Não foi possível obter a quantidade atual de {produto_selecionado}.")
+
+        nova_quantidade = int(input(f"Digite a nova quantidade para {produto_selecionado}: "))
+        
+        # Preparando os dados para enviar
+        data = {'quantidade': nova_quantidade}
+
+        # Enviando a requisição PUT para o servidor usando 'requests'
+        response = requests.put(f"{server_host}produtos/{produto_selecionado}", json=data)
+        
+        if response.status_code == 200:
+            print("Estoque atualizado com sucesso.")
+        else:
+            print(f"Erro ao atualizar estoque: {response.text}")
+
+    except IndexError:
+        print("Número de produto inválido.")
+    except ValueError:
+        print("A entrada não é um número válido.")
+    except Exception as e:
+        print(f"Ocorreu um erro: {e}")
+
+
 def bloquear_desbloquear_caixa():
     try:
         get_caixas()
@@ -156,12 +210,13 @@ def main():
     while True:
         print("-------Painel do admin do Supermercado Gambiarra-------")
         print("\nOpções:")
-        print("1: Ver caixas")
-        print("2: Ver histórico de compras")
-        print("3: Acompanhar compras em tempo real")
-        print("4: Criar novo caixa") # Nova opção
-        print("5: Bloquear/Desbloquear caixa")
-        print("6: Sair")
+        print("[1]: Ver caixas")
+        print("[2]: Ver histórico de compras")
+        print("[3]: Acompanhar compras em tempo real")
+        print("[4]: Criar novo caixa")
+        print("[5]: Bloquear/Desbloquear caixa")
+        print("[6]: Atualizar estoque dos produtos") 
+        print("[7]: Sair") # Nova opção
         print("-------------------------------------------------------")
 
         escolha = input("\nSelecione uma opção: ")
@@ -174,11 +229,13 @@ def main():
             acompanhar_compras_tempo_real()
         elif escolha == '4':
             criar_caixa()
-        elif escolha == '6':
-            print("\nSaindo...")
-            break
         elif escolha == '5':
             bloquear_desbloquear_caixa()
+        elif escolha == '7':
+            print("\nSaindo...")
+            break
+        elif escolha == '6':
+            atualizar_estoque()  # Chamada para a nova função
         else:
             print("\nOpção inválida!")
 
