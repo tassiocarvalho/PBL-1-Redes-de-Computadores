@@ -117,13 +117,16 @@ def handle_request(data):
 
 def handle_client(conn, addr):
     try:
-        data = conn.recv(1024).decode('utf-8')
+        print(f"Conexão recebida de {addr}")
+        data = conn.recv(4096).decode('utf-8')
+        print(f"Dados recebidos: {data}")
         if data:  # Verifique se há dados antes de processá-los
             status_code, response = handle_request(data)
             conn.sendall(f"HTTP/1.1 {status_code} OK\r\nContent-Type: application/json\r\nContent-Length: {len(response)}\r\n\r\n{response}".encode('utf-8'))
     except Exception as e:
         print(f"Erro ao processar a requisição de {addr}: {e}")
     finally:
+        print(f"Fechando a conexão com {addr}")
         conn.close()
 
 def main():
