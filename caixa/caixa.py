@@ -73,37 +73,6 @@ def realizar_compra():
     return produtos_selecionados
 
 
-    while True:
-        print("\nSelecione um produto pelo número ou digite 'sair' para finalizar a compra.")
-        escolha = input("Escolha: ")
-
-        if escolha.lower() == 'sair':
-            break
-
-        try:
-            escolha = int(escolha) - 1  # Converter a escolha para índice da lista (0-based)
-            if escolha < 0 or escolha >= len(produtos_disponiveis):
-                print("Número de produto inválido.")
-                continue
-
-            produto_escolhido = produtos_disponiveis[escolha]
-            quantidade = int(input(f"Quantidade de {produto_escolhido['nome']}: "))
-
-            if quantidade > produto_escolhido['quantidade']:
-                print("Quantidade indisponível.")
-                continue
-
-            produtos_selecionados.append({
-                'nome': produto_escolhido['nome'],
-                'preco': produto_escolhido['preco'],
-                'quantidade': quantidade
-            })
-        except ValueError:
-            print("Por favor, insira um número válido.")
-
-    return produtos_selecionados
-
-
 def pegar_produtos_do_sensor():
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

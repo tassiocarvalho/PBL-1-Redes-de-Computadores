@@ -7,7 +7,7 @@ import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from ipconfig import hostip, server_host, port
+from ipconfigadmin import hostip, server_host, port
 #SERVER_URL = "http://172.17.0.4:8000"
 
 def get_caixas():

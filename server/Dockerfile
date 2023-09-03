@@ -13,3 +13,4 @@ EXPOSE 5234
 
 # Comando para rodar o servidor
 CMD ["python", "server.py"]
+

@@ -7,12 +7,15 @@ WORKDIR /app
 # Copie os arquivos necessários para o container
 COPY caixa.py /app/
 COPY requirements.txt /app/
+COPY ipconfigcaixa.py .
 
 # Instale as dependências
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Definir porta padrão para o servidor
-EXPOSE 8000
+EXPOSE 5234
 
 # Comando para executar quando o container for iniciado
 CMD ["python", "caixa.py"]
+
+#docker run -it caixa -->>> executar docker no modo interativo
