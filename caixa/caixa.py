@@ -8,7 +8,7 @@ import time
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from ipconfig import hostip, port, server_host
+from ipconfigcaixa import hostip, port, server_host
 
 def clear_terminal():
     # Detectar o sistema operacional e limpar o terminal de acordo
@@ -228,7 +228,7 @@ def main():
         print('-------Caixa Supermercado gambiarra--------')
         print("\nOpções:")
         print("[1]: Adicionar produto à compra manualmente")
-        print("[2]: Pegar produtos do sensor")
+        print("[2]: Pegar produtos do leitor")
         print("[3]: Verificar itens no carrinho")
         print("[4]: Pagar compra")
         print("[5]: Sair")

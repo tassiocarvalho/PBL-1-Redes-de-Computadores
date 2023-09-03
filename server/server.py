@@ -15,15 +15,15 @@ data_store = {
     'caixa': [{"id": 666,"status": True}],
     'compras': [],
     'produtos': [
-    {"nome": "Banana", "preco": 5.00, "quantidade": 20},
-    {"nome": "Pacoca", "preco": 10.00, "quantidade": 20},
-    {"nome": "Laranja", "preco": 12.00, "quantidade": 20},
-    {"nome": "Melancia", "preco": 8.00, "quantidade": 20},
-    {"nome": "Arroz", "preco": 15.00, "quantidade": 20},
-    {"nome": "Feijao", "preco": 7.00, "quantidade": 20},
-    {"nome": "Pera", "preco": 11.00, "quantidade": 20},
-    {"nome": "Macarrao", "preco": 14.00, "quantidade": 20},
-    {"nome": "Goiaba", "preco": 6.50, "quantidade": 20}
+    {"nome": "Banana", "preco": 5.00, "quantidade": 100},
+    {"nome": "Pacoca", "preco": 10.00, "quantidade": 100},
+    {"nome": "Laranja", "preco": 12.00, "quantidade": 100},
+    {"nome": "Melancia", "preco": 8.00, "quantidade": 100},
+    {"nome": "Arroz", "preco": 15.00, "quantidade": 100},
+    {"nome": "Feijao", "preco": 7.00, "quantidade": 100},
+    {"nome": "Pera", "preco": 11.00, "quantidade": 100},
+    {"nome": "Macarrao", "preco": 14.00, "quantidade": 100},
+    {"nome": "Goiaba", "preco": 6.50, "quantidade": 100}
 ]
 }
 
@@ -71,6 +71,13 @@ def handle_request(data):
         elif path == '/compras':
             data_store['compras'].append(item)
             return 201, json.dumps({"mensagem": "Item adicionado às compras"})
+        elif path == '/produtos':  # Nova condição para adicionar produtos
+            existing_product = next((product for product in data_store['produtos'] if product['nome'] == item['nome']), None)
+            if existing_product:
+                return 409, json.dumps({"mensagem": "Produto com o mesmo nome já existe"})
+            else:
+                data_store['produtos'].append(item)
+                return 201, json.dumps({"mensagem": "Produto adicionado com sucesso"})
         else:
             return 404, json.dumps({"mensagem": "Não encontrado"})
     elif method == 'PUT':

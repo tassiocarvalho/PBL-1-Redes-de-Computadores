@@ -1,18 +1,15 @@
-# Use uma imagem oficial Python como base
-FROM python:3.8-slim
+# Utilize uma imagem base com Python 3.8
+FROM python:3.8
 
-# Definir diretório de trabalho no container
+# Cria um diretório de trabalho
 WORKDIR /app
 
-# Copie os arquivos necessários para o container
-COPY server.py /app/
-COPY requirements.txt /app/
+# Copie os arquivos para o container
+COPY server.py .
+COPY ipconfig.py .
 
-# Instale as dependências
-RUN pip install --no-cache-dir -r requirements.txt
+# Expõe a porta que o servidor vai rodar
+EXPOSE 5234
 
-# Definir porta padrão para o servidor
-EXPOSE 8000
-
-# Comando para executar quando o container for iniciado
+# Comando para rodar o servidor
 CMD ["python", "server.py"]

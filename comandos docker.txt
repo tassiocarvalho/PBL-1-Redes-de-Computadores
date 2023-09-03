@@ -1,0 +1,18 @@
+comandos docker// usando servidor linux usar sudo*
+
+para criar um docker: 
+
+docker build -t nomeaqui .
+
+para executar ao criar o docker na porta definida:
+
+docker run -p 3389:3389 nomeaqui
+
+
+para ver a lista de containers
+
+docker ps -a
+
+para executar 
+
+docker start [CONTAINER_ID ou CONTAINER_NAME]
