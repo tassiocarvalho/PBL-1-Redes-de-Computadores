@@ -55,6 +55,17 @@ Para manter a integridade e a segurança do projeto, foi decidido não utilizar 
 - **Acompanhar Compras em Tempo Real**: Para a tomada de decisões imediatas, os administradores podem acompanhar as compras em tempo real.
 - **Atualizar estoque**: O administrador pode atualizar o estoque dos produtos
 
+## Uso de Docker Containers
+Um ponto crucial que merece destaque é a utilização de Docker Containers para executar os módulos de cliente e servidor do projeto. O Docker oferece uma abstração e automação em nível de sistema operacional que facilita a distribuição de aplicações. Isso permite que o projeto seja altamente portátil e possa ser executado em qualquer sistema que suporte contêineres Docker, independentemente das configurações e dependências locais. Isso é especialmente valioso em um ambiente de desenvolvimento distribuído e para facilitar a implantação em diferentes plataformas de nuvem ou servidores locais.
+
+O uso de Docker Containers não só acelera o desenvolvimento e implantação, mas também fornece um ambiente isolado que aumenta a segurança, ao minimizar o risco de conflitos de dependência e potenciais vulnerabilidades.
+
+## Áreas para Melhorias e Expansão
+
+Como é típico de muitos protótipos iniciais, existem áreas evidentes para melhoria e expansão. Uma delas, por exemplo, é a introdução de uma interface visual mais intuitiva e amigável para o usuário, que poderia melhorar significativamente a experiência do cliente e do administrador. Esta interface visual não só poderia simplificar o processo de compra para os clientes, mas também fornecer ao administrador uma visão mais clara e analítica das operações do supermercado.
+
+Ao incorporar esses recursos adicionais e tecnologias, o sistema estará ainda mais preparado para atender às demandas e desafios do setor de varejo moderno.
+
 ## Considerações Finais
 
 O projeto "Supermercado Inteligente", conforme apresentado, contempla uma parcela significativa do que foi solicitado inicialmente. Demonstrou-se uma abordagem centralizada da arquitetura de Nuvem IoT, alavancando as vantagens de uma API REST para a comunicação entre o caixa e o centro de dados. A simulação do caixa do supermercado, junto com o software de geração de compras fictícias, oferece uma visão tangível de como tal sistema poderia funcionar na prática.
