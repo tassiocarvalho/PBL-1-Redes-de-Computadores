@@ -34,8 +34,8 @@ Para testar o protótipo, o caixa do supermercado foi simulado através de um so
 
 Ao aderir ao protocolo de uma API REST, implementamos duas interfaces principais:
 
-1. **Interface do Caixa**: Aqui, o usuário pode iniciar a compra, verificar itens e finalizar o pagamento.
-2. **Interface do Supermercado**: Nesta interface, o administrador tem acesso a várias funções. Ele pode ver informações sobre os caixas, bloquear ou liberar um caixa, visualizar o histórico de compras e acompanhar as compras em tempo real.
+1. **Interface do Caixa**: Aqui, o usuário pode iniciar a compra com opções de usar o sensor ou realizar uma compra manual, verificar itens e finalizar o pagamento.
+2. **Interface do Supermercado**: Nesta interface, o administrador tem acesso a várias funções. Ele pode ver informações sobre os caixas, bloquear ou liberar um caixa, visualizar o histórico de compras e acompanhar as compras em tempo real e atualizar estoque de produtos.
 
 Para manter a integridade e a segurança do projeto, foi decidido não utilizar frameworks de terceiros. Assim, utilizamos apenas mecanismos básicos presentes no sistema operacional para implementar a comunicação com base em uma arquitetura de rede baseada na Internet (TCP/IP).
 
@@ -43,7 +43,7 @@ Para manter a integridade e a segurança do projeto, foi decidido não utilizar 
 
 ### Interface do Caixa
 
-- **Iniciar Compra**: Os usuários podem começar a adicionar produtos ao carrinho.
+- **Iniciar Compra**: Os usuários podem começar a adicionar produtos ao carrinho, ou usando o leitor do sensor RFID
 - **Verificar Itens**: Antes de finalizar, os usuários têm a capacidade de verificar os itens adicionados ao carrinho.
 - **Pagar Compra**: Uma vez que todos os itens desejados são adicionados, os usuários podem finalizar a compra.
 
@@ -53,6 +53,7 @@ Para manter a integridade e a segurança do projeto, foi decidido não utilizar 
 - **Bloquear/Liberar Caixa**: Em caso de qualquer discrepância, o administrador tem o poder de bloquear ou liberar um caixa.
 - **Histórico de Compras**: Todos os registros de compras são armazenados e podem ser acessados por administradores.
 - **Acompanhar Compras em Tempo Real**: Para a tomada de decisões imediatas, os administradores podem acompanhar as compras em tempo real.
+- **Atualizar estoque**: O administrador pode atualizar o estoque dos produtos
 
 ## Considerações Finais
 
