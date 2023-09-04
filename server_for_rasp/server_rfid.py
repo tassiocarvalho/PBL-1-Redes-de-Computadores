@@ -33,7 +33,7 @@ def main():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     # Vinculando o socket a uma porta
-    server_socket.bind(("192.168.1.24", 8001))
+    server_socket.bind(("0.0.0.0", 3983))
     
     # Escutando por conexões de clientes
     server_socket.listen(5)

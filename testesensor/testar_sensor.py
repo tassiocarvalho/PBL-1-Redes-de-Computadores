@@ -50,7 +50,7 @@ def main():
     produtos = []
     
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(("192.168.1.24", 8001))
+    server_socket.bind(("172.16.103.0", 5050))
     server_socket.listen(5)
     
     print("Servidor rodando e esperando por conexões...")

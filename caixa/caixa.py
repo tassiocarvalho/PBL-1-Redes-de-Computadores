@@ -75,9 +75,14 @@ def realizar_compra():
 def pegar_produtos_do_sensor():
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client_socket.connect(("192.168.1.24", 8001))
+        client_socket.settimeout(10)  # Define um timeout de 10 segundos
+        client_socket.connect(("192.168.1.24", 3983))
 
         data = client_socket.recv(2048)
+        if not data:  # Verificar se não recebeu dados (pode adicionar esta checagem se quiser)
+            print("Nenhum dado recebido do sensor.")
+            return []
+
         produtos = json.loads(data.decode('utf-8'))
 
         print("\nProdutos adquiridos do sensor:")
@@ -96,6 +101,9 @@ def pegar_produtos_do_sensor():
 
         client_socket.close()
         return produtos
+    except socket.timeout:
+        print("Tempo limite da conexão excedido.")
+        return []
     except Exception as e:
         print(f"Erro ao pegar produtos do sensor: {e}")
         return []
