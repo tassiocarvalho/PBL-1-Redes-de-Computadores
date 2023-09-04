@@ -39,6 +39,33 @@ Ao aderir ao protocolo de uma API REST, implementamos duas interfaces principais
 
 Para manter a integridade e a segurança do projeto, foi decidido não utilizar frameworks de terceiros. Assim, utilizamos apenas mecanismos básicos presentes no sistema operacional para implementar a comunicação com base em uma arquitetura de rede baseada na Internet (TCP/IP).
 
+## Como Executar a Aplicação
+
+Para executar o servidor, abra o terminal e navegue até o diretório onde está o arquivo `Dockerfile`. Em seguida, siga os passos abaixo:
+
+### Utilizando Docker
+
+1. **Criar um Container**
+
+    ```bash
+    docker build -t server .
+    ```
+
+2. **Executar o Container (Configurando a Porta)**
+
+    ```bash
+    docker run -p 3389:3389 server
+    ```
+
+3. **Executar no Modo Interativo**
+
+    ```bash
+    docker run -it server
+    ```
+
+Esses comandos são válidos tanto para o módulo do caixa quanto para o módulo do administrador.
+
+
 ## Funcionalidades e Interfaces
 
 ### Interface do Caixa
