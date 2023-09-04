@@ -12,7 +12,7 @@ sys.path.append(parent_dir)
 from ipconfig import hostip, server_host, port
 
 data_store = {
-    'caixa': [{"id": 666,"status": True}],
+    'caixa': [{"id": 123,"status": True}],
     'compras': [],
     'produtos': [
     {"nome": "Banana", "preco": 5.00, "quantidade": 100},

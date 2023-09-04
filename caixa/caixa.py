@@ -59,8 +59,7 @@ def realizar_compra():
                 continue
 
             # Atualize a quantidade do produto no servidor
-            quantidade_real = produto_escolhido['quantidade'] - quantidade
-            atualizar_estoque(produto_escolhido['nome'], quantidade_real)
+
 
             produtos_selecionados.append({
                 'nome': produto_escolhido['nome'],
@@ -90,8 +89,6 @@ def pegar_produtos_do_sensor():
                 response = requests.get(f"{server_host}produtos/{produto['nome']}")
                 if response.status_code == 200:
                     produto_servidor = response.json()
-                    quantidade_real = produto_servidor['quantidade'] - produto['quantidade']
-                    atualizar_estoque(produto['nome'], quantidade_real)
                 else:
                     print(f"Produto {produto['nome']} não encontrado no estoque.")
             except Exception as e:
@@ -213,15 +210,64 @@ def main():
         elif escolha == '3':
             exibir_carrinho(compras)
         elif escolha == '4':
+            # Verificando se há estoque suficiente antes de finalizar a compra
+            estoque_suficiente = True
+            for produto in compras:
+                nome_produto = produto['nome']
+                quantidade_comprada = produto['quantidade']
+                
+                # Obtendo a quantidade atual do produto no estoque
+                response = requests.get(f"{server_host}produtos/{nome_produto}")
+                if response.status_code == 200:
+                    produto_servidor = response.json()
+                    quantidade_real = produto_servidor['quantidade']
+                    
+                    if quantidade_real == 0:
+                        print(f"Compra não pode ser realizada, {nome_produto} está fora de estoque.")
+                        estoque_suficiente = False
+                        break
+                    elif quantidade_comprada > quantidade_real:
+                        print(f"Compra não pode ser realizada, quantidade de {nome_produto} no estoque é insuficiente.")
+                        estoque_suficiente = False
+                        break
+                else:
+                    print(f"Erro ao obter informações de estoque para {nome_produto}.")
+                    estoque_suficiente = False
+                    break
+                    
+            if not estoque_suficiente:
+                continue  # Volta para o menu principal se o estoque for insuficiente
+
+            # Se chegou até aqui, significa que há estoque suficiente
             total = exibir_carrinho(compras)
             if pagar_compra(total):
                 response = requests.post(server_host+"compras", json=compras)
                 
                 if response.status_code == 201:
                     print("\nCompra realizada com sucesso!")
+                    
+                    # Atualizando o estoque aqui
+                    for produto in compras:
+                        nome_produto = produto['nome']
+                        quantidade_comprada = produto['quantidade']
+                        
+                        # Obtendo a quantidade atual do produto no estoque
+                        response = requests.get(f"{server_host}produtos/{nome_produto}")
+                        if response.status_code == 200:
+                            produto_servidor = response.json()
+                            quantidade_real = produto_servidor['quantidade']
+                        
+                            # Já foi verificado acima que isso é seguro
+                            quantidade_real -= quantidade_comprada
+                            atualizar_estoque(nome_produto, quantidade_real)
+                        
+                        else:
+                            print(f"Erro ao atualizar o estoque do produto {nome_produto}.")
+                            
                     compras = []
                 else:
                     print("\nErro ao realizar compra.")
+
         elif escolha == '5':
             print("\nSaindo...")
             break
