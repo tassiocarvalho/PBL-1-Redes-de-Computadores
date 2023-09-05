@@ -2,8 +2,18 @@ import socket
 import json
 import re
 import threading
+import logging
+from queue import Queue
+import signal
 import sys
 import os
+
+# Initialize Logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Initialize Thread Pool
+MAX_THREADS = 10
+queue = Queue()
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
@@ -11,8 +21,22 @@ sys.path.append(parent_dir)
 #HOST, PORT = '192.168.1.24', 8000
 from ipconfig import hostip, server_host, port
 
+def signal_handler(signal, frame):
+    print("Exiting gracefully")
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+def worker():
+    while True:
+        conn, addr = queue.get()
+        try:
+            handle_client(conn, addr)
+        finally:
+            queue.task_done()
+
 data_store = {
-    'caixa': [{"id": 123,"status": True}],
+    'caixa': [{"id": 123,"status": True}, {"id": 23,"status": True}],
     'compras': [],
     'produtos': [
     {"nome": "Banana", "preco": 5.00, "quantidade": 100},
@@ -117,27 +141,36 @@ def handle_request(data):
 
 def handle_client(conn, addr):
     try:
-        print(f"Conexão recebida de {addr}")
+        logging.info(f"Conexão recebida de {addr}")
+        conn.settimeout(10)  # Timeout
         data = conn.recv(4096).decode('utf-8')
-        print(f"Dados recebidos: {data}")
-        if data:  # Verifique se há dados antes de processá-los
+        
+        if data:
             status_code, response = handle_request(data)
             conn.sendall(f"HTTP/1.1 {status_code} OK\r\nContent-Type: application/json\r\nContent-Length: {len(response)}\r\n\r\n{response}".encode('utf-8'))
+    except socket.timeout:
+        logging.error(f"Timeout para {addr}")
     except Exception as e:
-        print(f"Erro ao processar a requisição de {addr}: {e}")
+        logging.error(f"Erro ao processar a requisição de {addr}: {e}")
     finally:
-        print(f"Fechando a conexão com {addr}")
+        logging.info(f"Fechando a conexão com {addr}")
         conn.close()
 
 def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Reuse socket
         s.bind((hostip, port))
         s.listen()
-        print(f"Server listening on {hostip}:{port}")
+        logging.info(f"Server listening on {hostip}:{port}")
+        
+        for _ in range(MAX_THREADS):
+            thread = threading.Thread(target=worker)
+            thread.daemon = True  # to exit the program when main thread is killed
+            thread.start()
+        
         while True:
             conn, addr = s.accept()
-            client_thread = threading.Thread(target=handle_client, args=(conn, addr))
-            client_thread.start()
+            queue.put((conn, addr))
 
 if __name__ == "__main__":
     main()

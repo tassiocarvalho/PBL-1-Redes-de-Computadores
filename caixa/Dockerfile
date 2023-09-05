@@ -13,7 +13,7 @@ COPY ipconfigcaixa.py .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Definir porta padrão para o servidor
-EXPOSE 3389
+EXPOSE 5234
 
 # Comando para executar quando o container for iniciado
 CMD ["python", "caixa.py"]

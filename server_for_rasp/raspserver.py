@@ -44,13 +44,13 @@ def main():
         b'E20000172211010118905454': {"nome": 'Melancia', "preco": 8.00, 'quantidade': 1},
         b'E20000172211011718905474': {"nome": 'Arroz', "preco": 15.00, 'quantidade': 1},
         b'E20000172211009418905449': {"nome": 'Feijao', "preco": 7.00, 'quantidade': 1},
-        b'E20000172211012518905484': {"nome": 'Pera', "preco": 11.00, 'quantidade': 10},
-        b'E20000172211011118905471': {"nome": 'Macarrao', "preco": 14.00, 'quantidade': 10},
-        b'E20000172211010218905459': {"nome": 'Goiaba', "preco": 6.50, 'quantidade': 10},
+        b'E20000172211012518905484': {"nome": 'Pera', "preco": 11.00, 'quantidade': 1},
+        b'E20000172211011118905471': {"nome": 'Macarrao', "preco": 14.00, 'quantidade': 1},
+        b'E20000172211010218905459': {"nome": 'Goiaba', "preco": 6.50, 'quantidade': 1},
     }
     
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(("172.16.103.0", 6660))
+    server_socket.bind(('0.0.0.0', 7777))
     server_socket.listen(5)
     
     print("Servidor rodando e esperando por conexões...")

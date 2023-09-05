@@ -76,7 +76,7 @@ def pegar_produtos_do_sensor():
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.settimeout(10)  # Define um timeout de 10 segundos
-        client_socket.connect(("192.168.1.24", 3983))
+        client_socket.connect(('172.16.103.0', 7777))
 
         data = client_socket.recv(2048)
         if not data:  # Verificar se não recebeu dados (pode adicionar esta checagem se quiser)
