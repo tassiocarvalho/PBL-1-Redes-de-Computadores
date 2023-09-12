@@ -26,7 +26,7 @@ A Representational State Transfer (REST) é uma arquitetura de estilo que define
 
 ### SERVIDOR NO RASPBARRY REALIZANDO A LEITURA DO RFID
 
-O projeto também possui um módulo de código que tem uma função de servidor para rodar no raspbarry, onde ao ser chamado pelo caixa ele realiza uma leitura das tag do sensor e armazena em uma lista de produtos do carrinho, mas antes é realizada uma leitura em uma lista pre definida das TAGS porque cada TAG já é um produto definido, ao adicionar produtos do carrinho ele manda para o cliente e formato JSON o conteúdo
+O projeto também possui um módulo de código que tem uma função de servidor para rodar no raspbarry TCP/IP, onde ao ser chamado pelo caixa ele realiza uma leitura das tag do sensor e armazena em uma lista de produtos do carrinho, mas antes é realizada uma leitura em uma lista pre definida das TAGS porque cada TAG já é um produto definido, ao adicionar produtos do carrinho ele manda para o cliente e formato JSON o conteúdo
 
 ## Desenvolvimento
 
