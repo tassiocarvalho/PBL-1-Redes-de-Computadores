@@ -24,6 +24,10 @@ A Internet das Coisas (IoT) refere-se à interconexão de dispositivos do dia-a-
 
 A Representational State Transfer (REST) é uma arquitetura de estilo que define um conjunto de restrições a serem usadas para criar serviços web. Uma API REST é uma interface que permite a interação com recursos em um servidor. Esta abordagem foi escolhida para a implementação do projeto devido à sua escalabilidade, facilidade de integração e capacidade de interagir com diferentes plataformas e dispositivos.
 
+### SERVIDOR NO RASPBARRY REALIZANDO A LEITURA DO RFID
+
+O projeto também possui um módulo de código que tem uma função de servidor para rodar no raspbarry, onde ao ser chamado pelo caixa ele realiza uma leitura das tag do sensor e armazena em uma lista de produtos do carrinho, mas antes é realizada uma leitura em uma lista pre definida das TAGS porque cada TAG já é um produto definido, ao adicionar produtos do carrinho ele manda para o cliente e formato JSON o conteúdo
+
 ## Desenvolvimento
 
 O sistema foi projetado seguindo uma arquitetura de Nuvem IoT centralizada. As compras feitas em cada caixa são transmitidas pela internet para um centro de dados em nuvem.
